@@ -26,7 +26,7 @@ jobs:
           pip install -r requirements.txt || true
 
       - name: Run scraper
-        run: python conditionchecker.py
+        run: python ConditionChecker.py
 
       - name: Commit and push if changed
         run: |
