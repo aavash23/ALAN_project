@@ -1002,5 +1002,55 @@ loadData();
 // Auto-refresh every 15 minutes
 setInterval(loadData, 15 * 60 * 1000);
 </script>
+<script>
+async function loadData() {
+  try {
+    const res = await fetch("data.json?ts=" + Date.now());
+    const data = await res.json();
+
+    // Header
+    document.getElementById("hdr-time").textContent =
+      new Date(data.timestamp).toLocaleString();
+    document.getElementById("hdr-season").textContent =
+      "Season: " + data.season;
+
+    // Wind (NWS)
+    document.getElementById("wind-speed").textContent =
+      data.nws.forecast_wind_speed_mph + " mph";
+
+    document.getElementById("wind-gust").textContent =
+      data.nws.forecast_wind_gust_mph + " mph";
+
+    document.getElementById("wind-dir").textContent =
+      data.nws.forecast_wind_direction_deg + "°";
+
+    // AWC
+    document.getElementById("awc-wind").textContent =
+      (data.awc.metar_wind_speed_kt || "—") + " kt";
+
+    document.getElementById("awc-vis").textContent =
+      (data.awc.metar_visibility_sm || "—") + " sm";
+
+    document.getElementById("awc-ceil").textContent =
+      (data.awc.metar_ceiling_ft || "—") + " ft";
+
+    // Moon
+    document.getElementById("moon-pct").textContent =
+      data.moon.forecast_moon_illumination_pct;
+
+    document.getElementById("moon-phase").textContent =
+      data.moon.forecast_moon_phase;
+
+    // Remove loading overlay
+    document.getElementById("load-overlay").classList.add("hidden");
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("load-overlay").innerText = "Failed to load data";
+  }
+}
+
+loadData();
+</script>
 </body>
 </html>
