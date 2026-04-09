@@ -667,5 +667,29 @@ def run_dashboard():
 
 
 # Run
-if __name__ == "__main__" or True:
-    result = run_dashboard()
+if __name__ == "__main__":
+    nws  = fetch_nws(SITE_LAT, SITE_LON)
+    awc  = fetch_awc()
+    bird = fetch_birdcast(SITE_LAT, SITE_LON, BIRDCAST_API_KEY)
+    moon = fetch_usno(SITE_LAT, SITE_LON)
+
+    output = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "site": SITE_NAME,
+        "season": SEASON,
+        "nws": nws,
+        "awc": awc,
+        "birdcast": bird,
+        "moon": moon,
+        "readiness": {
+            "staffing": STAFFING_READY,
+            "equipment": EQUIPMENT_READY,
+            "facilities": FACILITIES_READY
+        },
+        "treatments": TREATMENT_COUNTS
+    }
+
+    with open("data.json", "w") as f:
+        json.dump(output, f, indent=2)
+
+    print("✅ data.json updated")
